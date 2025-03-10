@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const YouTubeAudioPlayer = () => {
@@ -9,10 +9,11 @@ const YouTubeAudioPlayer = () => {
   const [page, setPage] = useState(1);
   const [nextPageToken, setNextPageToken] = useState("");
   const [prevPageToken, setPrevPageToken] = useState("");
-  const [videoId, setVideoId] = useState(""); // Estado para almacenar el ID del video de YouTube
+  const [videoId, setVideoId] = useState("");
 
-  const handleSearch = async (pageToken = "") => {
-    if (!query.trim()) {
+  // Función para buscar videos en YouTube
+  const handleSearch = async (pageToken = "", searchQuery = query) => {
+    if (!searchQuery.trim()) {
       setError("Por favor, ingresa un término de búsqueda.");
       return;
     }
@@ -21,16 +22,14 @@ const YouTubeAudioPlayer = () => {
       setLoading(true);
       setError("");
       const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${query}&key=AIzaSyDA1HbnHGxWpVSdTkYaK0r0Ka-ye0pmdFQ&type=video&pageToken=${pageToken}`
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=${searchQuery}&key=AIzaSyDA1HbnHGxWpVSdTkYaK0r0Ka-ye0pmdFQ&type=video&pageToken=${pageToken}`
       );
       const data = await response.json();
 
-      // Ordenar los resultados alfabéticamente por título
-      const sortedResults = data.items.sort((a, b) =>
-        a.snippet.title.localeCompare(b.snippet.title)
-      );
+      // Seleccionar 10 resultados al azar
+      const randomResults = data.items.sort(() => Math.random() - 0.5).slice(0, 10);
 
-      setResults(sortedResults);
+      setResults(randomResults);
       setNextPageToken(data.nextPageToken || "");
       setPrevPageToken(data.prevPageToken || "");
     } catch (err) {
@@ -40,8 +39,13 @@ const YouTubeAudioPlayer = () => {
     }
   };
 
+  // Realizar una búsqueda inicial al cargar la página
+  useEffect(() => {
+    handleSearch("", "musica"); // Término de búsqueda inicial (puedes cambiarlo)
+  }, []);
+
   const handlePlay = (videoId) => {
-    setVideoId(videoId); // Establecer el ID del video para reproducirlo
+    setVideoId(videoId); // Establecer el ID del video para mostrarlo
   };
 
   const handleNextPage = () => {
@@ -68,8 +72,8 @@ const YouTubeAudioPlayer = () => {
   return (
     <div className="container">
       <header>
-        <h1>Chucutube</h1>
-        <p>La web que pudo ser y nunca fue</p>
+        <h1>Mp3 youtube</h1>
+        <p>Musica de youtube</p>
       </header>
 
       <div className="search-container">
