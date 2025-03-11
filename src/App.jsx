@@ -118,13 +118,13 @@ const YouTubeAudioPlayer = () => {
         </button>
       </div>
 
-      {/* Reproductor de YouTube oculto con autoplay */}
+      {/* Reproductor de YouTube visible */}
       {videoId && (
-        <div>
+        <div className="video-container">
           <iframe
-            width="0"
-            height="0"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0`}
+            width="100%"
+            height="315"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1`}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
