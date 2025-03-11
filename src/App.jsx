@@ -120,7 +120,7 @@ const YouTubeAudioPlayer = () => {
 
       {/* Reproductor de YouTube oculto con autoplay */}
       {videoId && (
-        <div style={{ display: "none" }}>
+        <div>
           <iframe
             width="0"
             height="0"
